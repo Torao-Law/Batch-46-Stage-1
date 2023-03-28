@@ -21,13 +21,6 @@ Padding & margin(jarak) :
 - padding ukuran dari pinggir luar konten hingga ke dalam konten
 - margin ukuran dari pinggir konten ke konten lain.
 
-
-
-
-
-
-
-
 <h1 style="background-color: yellow">H</h1>
         <h1>Hello Batch 46</h1>
 
@@ -50,3 +43,28 @@ Padding & margin(jarak) :
         <div>
             <a href="http://dumbways.id/" style="color: blue; font-weight: bold;background-color: red">Visit Dumbways.ID</a>
         </div>
+
+
+
+
+
+===============================================================
+Day 2
+Cara menuliskan styling :
+Inline – menuliskan perintah CSS langsung pada elemen HTML.
+Internal – menuliskan perintah CSS di bagian <head> HTML.
+Eksternal – menuliskan perintah CSS pada file yang berbeda (eksternal)
+
+
+CSS HIERARCHY -> Spesifikasi pemilihan kategori dalam css.
+- Inline CSS (priority)
+- ID selector
+- Class selector
+- Tag (html) selector
+
+
+input:focus {
+    outline: none !important;
+    border:1px solid red;
+    box-shadow: 0 0 10px #719ECE;
+}
