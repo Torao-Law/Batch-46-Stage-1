@@ -48,7 +48,8 @@ Padding & margin(jarak) :
 
 
 
-===============================================================
+
+========================================================================================
 Day 2
 Cara menuliskan styling :
 Inline – menuliskan perintah CSS langsung pada elemen HTML.
@@ -68,3 +69,104 @@ input:focus {
     border:1px solid red;
     box-shadow: 0 0 10px #719ECE;
 }
+
+
+
+
+
+========================================================================================
+DAY 3 - FORM SUBMISSION
+------------------------
+Data store adalah bagaimana menyimpan data didalam sebuah file yang akan di gunakan.
+
+1. VARIABLE (var, const, let)
+var => bisa di ubah (versi lama)
+const => tidak bisa di ubah
+let => bisa di ubah (versi baru)
+// const myName = "Dandi Saputra"
+// console.log(myName)
+
+// let myName = "Yogi"
+// console.log(myName)
+
+// let myName1 = "Nero"
+// console.log(myName1)
+
+// var myName = "Dandi Saputra"
+// console.log(myName)
+
+// var myName = "Yogi"
+// console.log(myName)
+
+
+2. Type Data
+- Type Data primitif dan non-primitif
+- Primitif string, number, boolean, null, undifined.
+// let myName = "Dandi Saputra, 123"
+// console.log(typeof myName)
+
+// let myAge = 1000
+// console.log(myAge)
+// console.log(typeof myAge)
+
+// let isMarried = true/false
+// console.log(isMarried)
+// console.log(typeof isMarried)
+
+// let tissue = null
+// console.log(tissue)
+// console.log(typeof tissue)
+
+// let tissu = 0
+// console.log(tissu)
+// console.log(typeof tissu)
+
+
+3. CONDITIONAL(KONDISI) JAVASCRIPT
+// let myAge = 20
+
+// kondisi if else
+// if(myAge < 16) {
+//     alert("Kamu sudah dewasa")
+// } else {
+//     alert("Masih bocil")
+// }
+
+// if(myAge < 14) {
+//     alert("Belum bisa masuk SMP")
+// } else if(myAge < 16) {
+//     alert("Belum bisa masuk SMA")
+// } else {
+//     alert("Seharusnya sudah bekerja")
+// }
+
+4. FUNCTION JAVASCRIPT
+- Deklarasi, menjalankan, parameter, argument, return.
+
+// function helloWorld() {
+//     // code here
+//     let message = "Good Morning"
+//     console.log("Hello World")
+//     console.log(message)
+// }
+
+// helloWorld()
+
+// const message = function() {
+//     const name = "yoga"
+//     console.log(name)
+// }
+
+// message()
+
+// const greeting = () => {
+//     console.log("Good Morning")
+// }
+
+// greeting()
+
+function helloWorld(nilaiAwal, b) {
+    return nilaiAwal + b
+}
+
+console.log(helloWorld(10, 5))
