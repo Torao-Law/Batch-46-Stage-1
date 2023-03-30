@@ -170,3 +170,58 @@ function helloWorld(nilaiAwal, b) {
 }
 
 console.log(helloWorld(10, 5))
+a.href = `https://mail.google.com/mail/?view=cm&fs=1&to=${destination}&su=${subject}&body=${message}` 
+a.setAttribute('target', '_blank')
+
+
+=============================================================================
+DAY 4
+object dan array
+object dapat menyimpan nilai lebih dari satu yang dimana di simpan didalam properti.
+array dapat menyimpan nilai lebih dari satu yang dimana di simpan didalam index.
+
+Object
+let myStatus = {
+    myName: "Dandi Saputra",
+    myAge: 17,
+    isMarried: true,
+    myCar: {
+        car1: "rubicon",
+        car2: "bmw"
+    }
+}
+console.log(myStatus.myCar.car1)
+console.table(myStatus)
+
+ARRAY
+let myStatus = ["Dandi Saputra", 17, true, ["rubicon", "bmw"]]
+console.log(myStatus[3][0])
+console.table(myStatus)
+
+// ARRAY OF OBJECT
+let Batch46 = [
+    {
+        name: "Johanes",
+        age: 36,
+        isMarried: false,
+        myCar: {
+            car1: "rubicon",
+            car2: "bmw"
+        }
+    },
+    {
+        name: "Nico",
+        age: 45,
+        isMarried: true,
+        myCar: ["rubicon", "bmw"]
+    }
+]
+console.log(Batch46[0].myCar.car2)
+console.log(Batch46[1].myCar[0])
+// console.log(Batch46[0].name);
+// console.log(Batch46[1].age)
+// console.log(Batch46[0]['name'])
+// console.table(Batch46)
+// console.log(Batch46)
+
+
