@@ -225,3 +225,80 @@ console.log(Batch46[1].myCar[0])
 // console.log(Batch46)
 
 
+LOOPING
+for(let i = 50; i >= 1; i--) {
+    console.log(`Hello World ${i}`)
+}
+
+// console.log("Hello World 1")
+// console.log("Hello World 2")
+// console.log("Hello World 3")
+// console.log("Hello World 4")
+// console.log("Hello World 5")
+// console.log("Hello World 6")
+// console.log("Hello World 7")
+// console.log("Hello World 8")
+// console.log("Hello World 9")
+// console.log("Hello World 10")
+
+
+===========================================================================================
+// let x
+// console.log(x)
+// x = 1;
+// console.log(x)
+
+// let nilaiAwal = 10
+// let nilaiAkhir = 30
+// let total = nilaiAwal + nilaiAkhir
+// console.log(total)
+
+// const firstName = "Dandi"
+// const lastName = "Saputra"
+// console.log(firstName + " " + lastName)
+
+// const myAge = 24
+// console.log("Umur saya adalah " + myAge)
+// console.log(`Umur saya adalah ${myAge}`)
+
+// const total = 50 * 2
+// console.log(total)
+
+// let nilaiAwal = 10
+// nilaiAwal += 5
+// console.log(nilaiAwal)
+
+// let myAge = "17"
+// if(myAge === 17) {
+//     console.log("bisa ikut camp di dumbways")
+// } else {
+//     console.log("ikut tahun depan")
+// }
+
+// let age = 30
+// let x = age < 18 ? "Masih Kecil" : "Sudah Tua";
+// console.log(x)
+
+// let age = 19
+// if(age >= 20 && age >= 17) {
+//     console.log("sudah bisa berkeluarga")
+// } else {
+//     console.log("harus lulus sekolah dan harus punya ktp")
+// }
+
+// let vaksin = 1
+// if(vaksin >= 1 || vaksin >= 2) {
+//     console.log("boleh masuk")
+// } else {
+//     console.log("harus vaksin dulu")
+// }
+
+
+// let age = 30
+// let isMarried = age > 18 ? (age > 18 : age > 20) ? "Sudah bisa menikah" : "Cari kerja dulu"
+// console.log(isMarried)
+
+
+let a = 3;
+let result = (a >= 0) ? (a == 0 ? "zero" : "positive") : "negative";
+console.log(`The number is ${result}.`);
