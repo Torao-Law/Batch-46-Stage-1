@@ -1,31 +1,48 @@
 <html>
-    <head>
-        <title>Batch 46</title>
-        <link href="assets/css/style.css" rel="stylesheet">
-    </head>
-    
-    <body> 
-        <!-- navbar -->
-        <nav>
-            <div class="nav-left">
-              <ul>
-                <img src="assets/images/logo.png" alt="logo" >
-                <li>
-                    <a href="index.html">Home</a>
-                </li>
-                <li>
-                    <a href="blog.html">Blog</a>
-                </li>
-              </ul>
-            </div>
-      
-            <div class="nav-right">
-                <a href="contact-me.html">Contact Me</a>
-            </div>
-          </nav>
+  <head>
+    <title>Batch 46</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+    integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
+    <link href="assets/css/style.css" rel="stylesheet" />
+  </head>
 
-        <!-- Card -->
-        <div style="border: 1px solid #3d3d3d; padding: 15px; margin: 100px auto; width: 350px; border-radius: 15px; box-shadow: 0 0 30px #3d3d3d">
+  <body>
+    <!-- navbar -->
+    <nav>
+      <div class="nav-left">
+        <ul>
+          <img src="assets/images/logo.png" alt="logo" />
+          <li class="nav-list">
+            <a href="index.html">Home</a>
+          </li>
+          <li class="nav-list">
+            <a href="blog.html">Blog</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="nav-right nav-list">
+        <a href="contact-me.html">Contact Me</a>
+      </div>
+      <div class="nav-right" id="barsmenu">
+        <button onclick="openHumberger()" style="background-color: transparent; border: none; cursor: pointer;">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+    <div class="humberger-nav-container" id="humberger-nav-container">
+      <a href="index.html" class="humberger-nav-active">Home</a>
+      <a href="blog.html">Blog</a>
+      <a href="contact-me.html">Contact Me</a>
+    </div>
+
+    <!-- Card -->
+    <!-- <div style="border: 1px solid #3d3d3d; padding: 15px; margin: 100px auto; width: 350px; border-radius: 15px; box-shadow: 0 0 30px #3d3d3d">
             <img src="./assets/images/people-man.jpg" alt="people man" style="width: 100%; border-radius: 15px" />
             <h1 style="font-family: Poppins, Helvetica, sans-serif;">Dandi Saputra</h1>
             <p style="color: grey;">Seorang Fullstack Developer Profesional</p>
@@ -39,6 +56,89 @@
                     <td style="border: 1px solid #000;">2023</td>
                 </tr>
             </table>
-        </div>
-    </body>
+        </div> -->
+    <div class="container">
+        <section>
+          <div class="left">
+            <div class="card-container">
+            <!-- <div style="border: 1px solid #3d3d3d; padding: 15px; margin: 0 auto; width: 350px; border-radius: 15px; box-shadow: 0 0 30px #3d3d3d"> -->
+                <img src="./assets/images/people-man.jpg" alt="people man" style="width: 100%; border-radius: 15px" />
+                <h1 style="font-family: Poppins, Helvetica, sans-serif;">Dandi Saputra</h1>
+                <p style="color: grey;">Seorang Fullstack Developer Profesional</p>
+
+            <!-- tabel -->
+            <table
+                style="
+                border: 1px solid #000040;
+                width: 100%;
+                text-align: center;
+                border-collapse: collapse;
+                ">
+                <tr>
+                <th style="border: 1px solid #000040">Project Name</th>
+                <th style="border: 1px solid #000040">Year</th>
+                </tr>
+                <tr>
+                <td style="border: 1px solid #000040">Dumbways Mobile App</td>
+                <td style="border: 1px solid #000040">2023</td>
+                </tr>
+                <tr>
+                <td style="border: 1px solid #000040">Dumbways Web App</td>
+                <td style="border: 1px solid #000040">2022</td>
+                </tr>
+            </table>
+            </div>
+          </div>
+
+          <div class="right">
+              <h1>What i do</h1>
+              <p>
+              Lorem Ipsum is simply dummy text of the printing and typesetting
+              industry. Lorem Ipsum has been the industry's standard dummy text ever
+              since the 1500s, when an unknown printer took a galley of type and
+              scrambled it to make a type specimen book. It has survived not only
+              five centuries, but also the leap into electronic typesetting,
+              remaining essentially unchanged.
+              </p>
+
+              <div class="skill">
+                <div>
+                  <img src="assets/images/logo.png" />
+                  <h3>Frontend Developer</h3>
+                  <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum,
+                  temporibus.
+                  </p>
+                </div>
+                <div>
+                    <img src="assets/images/logo.png" />
+                    <h3>Backend Developer</h3>
+                    <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum,
+                    temporibus.
+                    </p>
+                </div>
+                <div>
+                    <img src="assets/images/logo.png" />
+                    <h3>Fullstack Developer</h3>
+                    <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum,
+                    temporibus.
+                    </p>
+                </div>
+              </div>
+
+              <div class="social-media">
+              <h1>Found Me On</h1>
+              <div class="list-sosmed">
+                  <i class="fa-brands fa-facebook-f"></i>
+                  <i class="fa-brands fa-instagram"></i>
+                  <i class="fa-brands fa-twitter"></i>
+              </div>
+              </div>
+          </div>
+        </section>
+    </div>
+    <script src="assets/js/navbar.js"></script>
+  </body>
 </html>
