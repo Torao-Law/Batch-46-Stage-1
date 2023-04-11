@@ -1,20 +1,22 @@
+// Promise (Janji)
+// Object yang mepresentasikan keberhasilan dan kegagalan sebuah peristiwa pada asynchronous dimasa datang
+// Janji = (terpenuhi, ingkar)
+// states = (Fulfilled, Rejected, Pending)
+// callback = (resolve, reject, finally)
+// action = (then, catch)
 
-let condition = true;
-
-let promise = new Promise(function (resolve, reject) {
-    if (condition) {
-        resolve("Promise is resolved");
+// CONTOH IMPLEMENT 1
+const status = false
+let promise = new Promise((resolve, reject) => {
+    if(status) {
+        resolve("Promise is resolved")
     } else {
-        reject("Promise is rejected");
+        reject("Promise is rejected")
     }
 })
 
-// console.log(promise)
-// what? why it is appear Promise? because we need to wait it, that's the point of the promise, we should access it like this :
-promise.then(function (value) {
-    console.log(value);
-}).catch(function (reason) {
-    console.log(reason)
-})
+console.log(promise)
 
-
+promise
+    .then((value) => console.log(value))
+    .catch((value) => console.log(value))

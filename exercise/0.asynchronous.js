@@ -1,9 +1,11 @@
-// synchronous concept :
-// console.log('Hello')
-// console.log('Javascript')
-// console.log('Coder')
+// Synchronous
+console.log("Pesan 1")
+console.log("Pesan 2")
+console.log("Pesan 3")
 
-// asynchronous concept :
-console.log('Hello');
-setTimeout(() => { console.log('Javascript') }, 5000) // delay for 5000 seconds
-console.log('Coder');
+console.log("============================")
+
+// Asynchronous 
+console.log("Start 1")
+setTimeout(() => console.log("Pesan 2"), 2000)
+console.log("Start 3")

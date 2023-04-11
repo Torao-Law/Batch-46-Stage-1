@@ -1,19 +1,10 @@
-// What is ajax?
-// basically ajax, is simply an technique in javascript to make we can interact with asynchronous request. Example, if you get data from internet.
-const xhr = new XMLHttpRequest();
+const xhr = new XMLHttpRequest()
 
-// But the basic syntax for we learn looks like this :
-xhr.open('GET', 'https://your-url', true);
-// param 1 : is the method
-// param 2 : is the url
-// param 3 : true or false, if true mean that we using asynchronous WebAssembly, and false means we using synchronous way. It is recommended to make it true (async)
+xhr.open("METHOD", "LINK URL", "STATUS")
+// 1. GET, POST, PATCH, DELETE
+// 2. https://api.npoint.io/19dc1d52f9465c39624a
+// 3. true/false
 
-xhr.onload = function () { } // to load and check the status of the request
-xhr.onerror = function () { } // loaded when it is error when we requesting the data
-xhr.send(); // send the request to the server.
-
-
-// AJAX is a technique for making asynchronous HTTP requests from a web page to a server, using the XMLHttpRequest object in the browser. Since the XMLHttpRequest object is specific to the browser environment, it cannot be used directly in Node.js. So we gonna make it directly in our project.
-
-// And it is gonna using connection too, because we are gonna using AJAX to request data from internet.
-
+xhr.onload = function() { } // ketika mengecek status request, saat di load
+xhr.onerror = function() { } // ketika kondisi error, mau menjalankan apa
+xhr.send() // kirim sebuah request ke alamat server

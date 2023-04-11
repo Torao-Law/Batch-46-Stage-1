@@ -1,29 +1,30 @@
-const promise = new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://api.npoint.io/8992e3472bd51ca7d5b5', true);
-    // console.log(xhr)
-    xhr.onload = () => {
-        if (xhr.status === 200) {
-            // we parsing so it is easier to read in console
-            // response vs reponseText, the difference is responseText older version, response is newer version, but for our course right now it is just the same.
-            resolve(JSON.parse(xhr.response));
+const testimonial = new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+
+    xhr.open("GET", "https://api.npoint.io/19dc1d52f9465c39624a", true)
+
+    xhr.onload = function (){
+        if(xhr.status == 200) {
+            resolve(JSON.parse(xhr.response))
         } else {
-            reject('Error loading data');
+            reject("Error loading data")
         }
-    };
-    xhr.onerror = () => {
-        reject('Network error');
-    };
-    xhr.send();
+    }
+
+    xhr.onerror = function() {
+        reject("Network Error")
+    }
+
+    xhr.send()
 })
 
-async function getAllTestimonials() {
-    const response = await promise;
+async function getAllTestimonial() {
+    const response = await testimonial
     console.log(response)
 
-    let testimonialHTML = '';
-    response.forEach(function (item) {
-        testimonialHTML += `<div class="testimonial">
+    let testimonialForHtml = ""
+    response.forEach((item) => {
+        testimonialForHtml += `<div class="testimonial">
             <img src="${item.image}" class="profile-testimonial" />
             <p class="quote">"${item.quote}"</p>
             <p class="author">- ${item.author}</p>
@@ -31,24 +32,21 @@ async function getAllTestimonials() {
         </div>`
     })
 
-    document.getElementById('testimonials').innerHTML = testimonialHTML;
+    document.getElementById("testimonials").innerHTML = testimonialForHtml
 }
+getAllTestimonial()
 
-getAllTestimonials()
 
-async function getFilteredTestimonials(rating) {
-    const response = await promise;
-
-    const testimonialFiltered = response.filter(function (item) {
-        return item.rating === rating
-    })
-
-    console.log(testimonialFiltered)
-
+async function filterTestimonials(rating) {
+    const response =  await testimonial
     let testimonialHTML = '';
 
+    const testimonialFiltered = response.filter(function (item) {
+        return item.rating === rating;
+    })
+
     if (testimonialFiltered.length === 0) {
-        testimonialHTML = '<h1> Data not found! </h1>';
+        testimonialHTML = `<h1> Data not found! </h1>`
     } else {
         testimonialFiltered.forEach(function (item) {
             testimonialHTML += `<div class="testimonial">
@@ -62,3 +60,40 @@ async function getFilteredTestimonials(rating) {
 
     document.getElementById('testimonials').innerHTML = testimonialHTML;
 }
+
+
+
+
+
+
+
+
+// [
+//     {
+//     "image": "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+//     "quote": "Keren banget jasanya!",
+//     "author": "Farhan Hadyan",
+//     "rating": 5
+//     },
+//     {
+//     "image": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+//     "quote": "Keren lah pokoknya!",
+//     "author": "Adiguna Sanjaya",
+//     "rating": 4
+//     }
+// ]
+
+// [
+//     {
+//     image: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+//     quote: "Keren banget jasanya!",
+//     author: "Farhan Hadyan",
+//     rating: 5
+//     },
+//     {
+//     image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+//     quote: "Keren lah pokoknya!",
+//     author: "Adiguna Sanjaya",
+//     rating: 4
+//     }
+// ]
