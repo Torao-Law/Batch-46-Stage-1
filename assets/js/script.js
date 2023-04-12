@@ -102,8 +102,8 @@ function createTime(time) {
   return `${date} ${month[indexMonth]} ${year} ${hour} : ${minute} WIB`
 }
 
-function getDuration(time) {
-  const distance = new Date() - new Date(time)
+function getDuration(startDate, endDate) {
+  const distance = new Date(endDate) - new Date(startDate)
   const dayDistance = Math.floor(distance / (24 * 60 * 60 * 1000))
   if(dayDistance > 0) {
     return dayDistance + " Day Ago" // 1 day ago

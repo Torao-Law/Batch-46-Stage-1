@@ -40,6 +40,14 @@ nav img {
     color: white;
 }
 
+.btn-submit {
+    background-color: orangered !important;
+}
+
+.text-color {
+    color: orangered !important;
+}
+
 
 /* Contact me styling */
 form {
