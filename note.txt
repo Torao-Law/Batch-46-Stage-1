@@ -1,0 +1,11 @@
+init go.mod
+go mod init "name module"
+
+add echo framework
+go get github.com/labstack/echo/v4
+
+start server
+go run main.go
+
+stop server
+ctrl + c
