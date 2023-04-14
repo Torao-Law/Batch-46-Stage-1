@@ -26,11 +26,10 @@
     <!-- Blog -->
     <div class="blog-detail">
       <div class="blog-detail-container">
-        <p>{{.Id}}</p>
-        <h1>{{.Title}}</h1>
-        <div class="author">12 Jul 2021 22:30 WIB | {{.Author}}</div>
+        <h1>{{.Blog.Title}}</h1>
+        <div class="author">{{.Blog.PostDate}} | {{.Blog.Author}}</div>
         <img src="/public/images/blog-img-detail.png" alt="detail" />
-        <p>{{.Content}}</p>
+        <p>{{.Blog.Content}}</p>
       </div>
     </div>
   </body>

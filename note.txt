@@ -9,3 +9,44 @@ go run main.go
 
 stop server
 ctrl + c
+
+// jika di js
+// let obj1 = {
+// 	myName: "dandi",
+// 	myAge: 17,
+// 	isMarried: true
+// }
+
+// jika di golang
+type Personal struct {
+	MyName    string
+	MyAge     int
+	IsMarried bool
+	Handsome  bool
+}
+
+// object
+var student1 = Personal{
+	MyName:    "Dandi",
+	MyAge:     16,
+	IsMarried: false,
+	Handsome:  true,
+}
+
+var batch46 = []Personal{
+	{
+		MyName:    "Dandi",
+		MyAge:     16,
+		IsMarried: false,
+		Handsome:  true,
+	},
+	{
+		MyName:    "Dandi",
+		MyAge:     16,
+		IsMarried: false,
+		Handsome:  true,
+	},
+}
+
+var student3 = []string{"David", "Wahyudi", "Ricky"}
+	fmt.Println(student3)
