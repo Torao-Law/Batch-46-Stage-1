@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"html/template"
 	"net/http"
+	"personal-web/connection"
 	"strconv"
 	"time"
 
@@ -11,8 +13,10 @@ import (
 )
 
 type Blog struct {
+	ID       int
 	Title    string
 	Content  string
+	Image    string
 	Author   string
 	PostDate string
 }
@@ -39,6 +43,8 @@ var dataBlog = []Blog{
 }
 
 func main() {
+	connection.DatabaseConnect()
+
 	// create new echo instance
 	e := echo.New()
 
@@ -93,9 +99,26 @@ func blog(c echo.Context) error {
 	}
 
 	// map(tipe data) => key and value
+	data, _ := connection.Conn.Query(context.Background(), "SELECT id, title, post_date, content, image FROM tb_blog")
+
+	var result []Blog
+
+	for data.Next() {
+		var each = Blog{}
+
+		err := data.Scan(&each.ID, &each.Title, &each.PostDate, &each.Content, &each.Image)
+		if err != nil {
+			fmt.Println(err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+		}
+
+		each.Author = "Surya Elidanto Gans"
+
+		result = append(result, each)
+	}
 
 	blogs := map[string]interface{}{
-		"Blog": dataBlog,
+		"Blog": result,
 	}
 
 	return tmpl.Execute(c.Response(), blogs)
