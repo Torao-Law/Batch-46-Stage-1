@@ -45,7 +45,7 @@
     </div>
     <div class="mb-3">
       <label for="content" class="form-label">Content</label>
-      <textarea name="content" class="form-control h-50" id="content"></textarea>
+      <textarea name="content" class="form-control h-25" id="content"></textarea>
     </div>
     <div class="mb-3">
       <label class="form-label" for="upload-image">Upload Image</label>
@@ -56,22 +56,22 @@
     </div>
   </form>
 
-  <div class="container" style="margin-top: 100px;">
+  <div class="container" style="margin-top: 100px; margin-bottom: 50px">
     {{range $index, $data := .Blog}}
     <div class="card mb-3" style="width: 100%;">
       <div class="row">
         <div class="col-md-4 p-3">
-          <img src="/public/images/{{$data.Image}}" class="img-fluid" alt="image-review">
+          <img src="/public/images/blog-img.png" class="img-fluid" alt="image-review">
         </div>
         <div class="col-md-8">
           <div class="card-body">
             <div class="d-flex justify-content-end">
               <a href="" class="btn btn-secondary text-decoration-none me-3 px-3 py-1" style="font-size: 14px;">EDIT</a>
-              <a href="/delete-blog/{{$index}}" class="btn btn-danger text-decoration-none px-3 py-1"
+              <a href="/delete-blog/{{$data.ID}}" class="btn btn-danger text-decoration-none px-3 py-1"
                 style="font-size: 14px;">DELETE</a>
             </div>
             <h2 class="card-title m-0 p-0">
-              <a class="text-decoration-none text-black m-0 p-0" href="/blog-detail/{{$index}}"
+              <a class="text-decoration-none text-black m-0 p-0" href="/blog-detail/{{$data.ID}}"
                 target="_blank">{{$data.Title}}</a>
             </h2>
             <div class="detail-blog-content m-0 p-0 mb-2" style="font-size: 14px;">

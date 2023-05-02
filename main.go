@@ -18,29 +18,29 @@ type Blog struct {
 	Content  string
 	Image    string
 	Author   string
-	PostDate string
+	PostDate time.Time
 }
 
-var dataBlog = []Blog{
-	{
-		Title:    "Pasar coding dinilai masih menjanjikan",
-		Content:  "Ketimpangan sumber daya manusia (SDM) di sektor digital masih menjadi isu yang belum terpecahkan. Berdasarkan penelitian ManpowerGroup, ketimpangan SDM global, termasuk Indonesia, meningkat dua kali lipat dalam satu dekade terakhir. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam, molestiae numquam! Deleniti maiores expedita eaque deserunt quaerat! Dicta, eligendi debitis?",
-		Author:   "Jaya Saleh",
-		PostDate: "14/04/2023",
-	},
-	{
-		Title:    "Pasar coding dinilai masih sedikit",
-		Content:  "Ketimpangan sumber daya manusia (SDM) di sektor digital masih menjadi isu yang belum terpecahkan. Berdasarkan penelitian ManpowerGroup, ketimpangan SDM global, termasuk Indonesia, meningkat dua kali lipat dalam satu dekade terakhir. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam, molestiae numquam! Deleniti maiores expedita eaque deserunt quaerat! Dicta, eligendi debitis?",
-		Author:   "Yoga Wicaksono",
-		PostDate: "15/04/2023",
-	},
-	{
-		Title:    "Pasar coding dinilai masih sedikit",
-		Content:  "Ketimpangan sumber daya manusia (SDM) di sektor digital masih menjadi isu yang belum terpecahkan. Berdasarkan penelitian ManpowerGroup, ketimpangan SDM global, termasuk Indonesia, meningkat dua kali lipat dalam satu dekade terakhir. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam, molestiae numquam! Deleniti maiores expedita eaque deserunt quaerat! Dicta, eligendi debitis?",
-		Author:   "Yoga Wicaksono",
-		PostDate: "15/04/2023",
-	},
-}
+// var dataBlog = []Blog{
+// 	{
+// 		Title:   "Pasar coding dinilai masih menjanjikan",
+// 		Content: "Ketimpangan sumber daya manusia (SDM) di sektor digital masih menjadi isu yang belum terpecahkan. Berdasarkan penelitian ManpowerGroup, ketimpangan SDM global, termasuk Indonesia, meningkat dua kali lipat dalam satu dekade terakhir. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam, molestiae numquam! Deleniti maiores expedita eaque deserunt quaerat! Dicta, eligendi debitis?",
+// 		// Author:  "Jaya Saleh",
+// 		// PostDate: "14/04/2023",
+// 	},
+// 	{
+// 		Title:   "Pasar coding dinilai masih sedikit",
+// 		Content: "Ketimpangan sumber daya manusia (SDM) di sektor digital masih menjadi isu yang belum terpecahkan. Berdasarkan penelitian ManpowerGroup, ketimpangan SDM global, termasuk Indonesia, meningkat dua kali lipat dalam satu dekade terakhir. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam, molestiae numquam! Deleniti maiores expedita eaque deserunt quaerat! Dicta, eligendi debitis?",
+// 		Author:  "Yoga Wicaksono",
+// 		// PostDate: "15/04/2023",
+// 	},
+// 	{
+// 		Title:   "Pasar coding dinilai masih sedikit",
+// 		Content: "Ketimpangan sumber daya manusia (SDM) di sektor digital masih menjadi isu yang belum terpecahkan. Berdasarkan penelitian ManpowerGroup, ketimpangan SDM global, termasuk Indonesia, meningkat dua kali lipat dalam satu dekade terakhir. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam, molestiae numquam! Deleniti maiores expedita eaque deserunt quaerat! Dicta, eligendi debitis?",
+// 		Author:  "Yoga Wicaksono",
+// 		// PostDate: "15/04/2023",
+// 	},
+// }
 
 func main() {
 	connection.DatabaseConnect()
@@ -100,6 +100,7 @@ func blog(c echo.Context) error {
 
 	// map(tipe data) => key and value
 	data, _ := connection.Conn.Query(context.Background(), "SELECT id, title, post_date, content, image FROM tb_blog")
+	fmt.Println(data)
 
 	var result []Blog
 
@@ -112,7 +113,7 @@ func blog(c echo.Context) error {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 		}
 
-		each.Author = "Surya Elidanto Gans"
+		// each.Author = "Dandi Saputra"
 
 		result = append(result, each)
 	}
@@ -132,48 +133,46 @@ func blogdetail(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message ": err.Error()})
 	}
 
-	var BlogData = Blog{}
-	for index, data := range dataBlog {
-		if id == index {
-			BlogData = Blog{
-				Title:    data.Title,
-				Content:  data.Content,
-				PostDate: data.PostDate,
-				Author:   data.Author,
-			}
-		}
+	var BlogDetail = Blog{}
+
+	err = connection.Conn.QueryRow(context.Background(), "SELECT id, title, content, image, post_date FROM tb_blog WHERE id = $1", id).Scan(&BlogDetail.ID, &BlogDetail.Title, &BlogDetail.Content, &BlogDetail.Image, &BlogDetail.PostDate)
+
+	BlogDetail.Author = "Jery"
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message ": err.Error()})
 	}
 
 	data := map[string]interface{}{
-		"Blog": BlogData,
+		"Blog": BlogDetail,
 	}
 
 	return tmpl.Execute(c.Response(), data)
 }
 
 func addBlog(c echo.Context) error {
-	title := c.FormValue("title")
-	content := c.FormValue("content")
+	title := c.FormValue("title")     // Batch 46
+	content := c.FormValue("content") // Finishing CRUD
+	image := "image.png"
 
-	var addBlog = Blog{
-		Title:    title,
-		Content:  content,
-		Author:   "Dandi Saputra",
-		PostDate: time.Now().String(),
+	_, err := connection.Conn.Exec(context.Background(), "INSERT INTO tb_blog(title, content, image, post_date) VALUES ($1, $2, $3, $4)", title, content, image, time.Now())
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message ": err.Error()})
 	}
 
-	fmt.Println(addBlog)
-	dataBlog = append(dataBlog, addBlog)
-
-	// fmt.Println(title)
-	// fmt.Println(content)
-	return c.Redirect(http.StatusMovedPermanently, "/")
+	return c.Redirect(http.StatusMovedPermanently, "/blog")
 }
 
 func deleteBlog(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id")) // id = 0 string => 0 int
+	id, _ := strconv.Atoi(c.Param("id")) // id = 1 string => 1 int
 
-	dataBlog = append(dataBlog[:id], dataBlog[id+1:]...)
+	_, err := connection.Conn.Exec(context.Background(), "DELETE FROM tb_blog WHERE id=$1", id)
+
+	// DELETE FROM tb_blog WHERE id=1
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message ": err.Error()})
+	}
 
 	return c.Redirect(http.StatusMovedPermanently, "/blog")
 }
