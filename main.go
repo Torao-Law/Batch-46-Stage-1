@@ -21,6 +21,12 @@ type Blog struct {
 	PostDate time.Time
 }
 
+type Experience struct {
+	ID      int
+	Project string
+	Year    int
+}
+
 // var dataBlog = []Blog{
 // 	{
 // 		Title:   "Pasar coding dinilai masih menjanjikan",
@@ -79,7 +85,28 @@ func home(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message ": err.Error()})
 	}
 
-	return tmpl.Execute(c.Response(), nil)
+	data, _ := connection.Conn.Query(context.Background(), "SELECT * FROM public.tb_experience")
+
+	var exp []Experience
+
+	for data.Next() {
+		var each = Experience{}
+
+		err := data.Scan(&each.ID, &each.Project, &each.Year)
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+		}
+
+		exp = append(exp, each)
+	}
+
+	fmt.Println(exp)
+	experiences := map[string]interface{}{
+		"Experience": exp,
+	}
+
+	return tmpl.Execute(c.Response(), experiences)
 }
 
 func contactMe(c echo.Context) error {
@@ -113,7 +140,7 @@ func blog(c echo.Context) error {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 		}
 
-		// each.Author = "Dandi Saputra"
+		each.Author = "Dandi Saputra"
 
 		result = append(result, each)
 	}

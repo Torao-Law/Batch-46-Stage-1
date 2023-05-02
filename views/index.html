@@ -57,10 +57,12 @@
               </tr>
             </thead>
             <tbody>
+              {{range $index, $data := .Experience}}
               <tr>
-                <td>Personal Web Apps</td>
-                <td>2023</td>
+                <td>{{$data.Project}}</td>
+                <td>{{$data.Year}}</td>
               </tr>
+              {{end}}
             </tbody>
           </table>
         </div>
