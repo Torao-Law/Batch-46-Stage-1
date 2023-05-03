@@ -74,26 +74,25 @@ func main() {
 }
 
 func home(c echo.Context) error {
-	sess, _ := session.Get("session", c)
-
-	if sess.Values["isLogin"] != true {
-		userData.IsLogin = false
-	} else {
-		userData.IsLogin = sess.Values["isLogin"].(bool)
-		userData.Name = sess.Values["name"].(string)
-	}
-
-	login := map[string]interface{}{
-		"DataSession": userData,
-	}
-
 	var tmpl, err = template.ParseFiles("views/index.html")
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message ": err.Error()})
 	}
 
-	return tmpl.Execute(c.Response(), login)
+	sess, _ := session.Get("session", c)
+
+	flash := map[string]interface{}{
+		"FlashStatus":  sess.Values["isLogin"],
+		"FlashMessage": sess.Values["message"],
+		"FlashName":    sess.Values["name"],
+	}
+
+	delete(sess.Values, "message")
+	delete(sess.Values, "status")
+	sess.Save(c.Request(), c.Response())
+
+	return tmpl.Execute(c.Response(), flash)
 }
 
 func contactMe(c echo.Context) error {
@@ -257,7 +256,7 @@ func login(c echo.Context) error {
 	sess, _ := session.Get("session", c)
 	sess.Options.MaxAge = 10800 // 3 jam
 	sess.Values["message"] = "Login Success"
-	sess.Values["alertStatus"] = true // show alert
+	sess.Values["status"] = true // show alert
 	sess.Values["name"] = user.Name
 	sess.Values["id"] = user.ID
 	sess.Values["isLogin"] = true // access login
@@ -290,15 +289,16 @@ func register(c echo.Context) error {
 func logout(c echo.Context) error {
 	sess, _ := session.Get("session", c)
 	sess.Options.MaxAge = -1
+	sess.Values["isLogin"] = false
 	sess.Save(c.Request(), c.Response())
 
-	return c.Redirect(http.StatusMovedPermanently, "/")
+	return c.Redirect(http.StatusTemporaryRedirect, "/")
 }
 
 func redirectWithMessage(c echo.Context, message string, status bool, path string) error {
 	sess, _ := session.Get("session", c)
 	sess.Values["message"] = message
-	sess.Values["alertStatus"] = status
+	sess.Values["status"] = status
 	sess.Save(c.Request(), c.Response())
 
 	return c.Redirect(http.StatusMovedPermanently, path)
