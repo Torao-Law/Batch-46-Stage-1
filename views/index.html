@@ -34,12 +34,40 @@
           </li>
         </ul>
 
-        <button class="btn btn-danger btn-submit" type="submit">
-          <a href="/contact" style="text-decoration: none; color: white">Contact Me</a>
-        </button>
+        <div class="d-flex justify-content-end">
+          <ul class="navbar-nav me-auto mb-2 ms-5 mb-lg-0">
+            {{if .DataSession.IsLogin}}
+              <li class="nav-item">
+                <a class="nav-link" href="#">Hallo, {{.DataSession.Name}}</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link " href="/logout">Logout</a>
+              </li>
+              {{else}}
+              <li class="nav-item">
+                  <a class="nav-link" href="/form-register">Register</a>
+              </li>
+              <li class="nav-item ms-3">
+                  <a class="nav-link " href="/form-login">Login</a>
+              </li>
+            {{end}}
+          </ul>
+          <a class="btn btn-danger btn-submit ms-5" href="/contact">Contact Me</a>
+        </div>
       </div>
     </div>
   </nav>
+
+  {{if .FlashMessage}}
+  {{if .FlashStatus}}
+  <div class="alert alert-success" role="alert">
+    {{.FlashMessage}}
+  </div>
+  {{else}}
+  <div></div>
+  {{end}}
+  {{end}}
+
 
   <!-- Content -->
   <div class="container mt-5 d-flex justify-content-between">

@@ -4,12 +4,16 @@ import (
 	"context"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"personal-web/connection"
 	"strconv"
 	"time"
 
+	"github.com/gorilla/sessions"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type Blog struct {
@@ -27,26 +31,19 @@ type Experience struct {
 	Year    int
 }
 
-// var dataBlog = []Blog{
-// 	{
-// 		Title:   "Pasar coding dinilai masih menjanjikan",
-// 		Content: "Ketimpangan sumber daya manusia (SDM) di sektor digital masih menjadi isu yang belum terpecahkan. Berdasarkan penelitian ManpowerGroup, ketimpangan SDM global, termasuk Indonesia, meningkat dua kali lipat dalam satu dekade terakhir. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam, molestiae numquam! Deleniti maiores expedita eaque deserunt quaerat! Dicta, eligendi debitis?",
-// 		// Author:  "Jaya Saleh",
-// 		// PostDate: "14/04/2023",
-// 	},
-// 	{
-// 		Title:   "Pasar coding dinilai masih sedikit",
-// 		Content: "Ketimpangan sumber daya manusia (SDM) di sektor digital masih menjadi isu yang belum terpecahkan. Berdasarkan penelitian ManpowerGroup, ketimpangan SDM global, termasuk Indonesia, meningkat dua kali lipat dalam satu dekade terakhir. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam, molestiae numquam! Deleniti maiores expedita eaque deserunt quaerat! Dicta, eligendi debitis?",
-// 		Author:  "Yoga Wicaksono",
-// 		// PostDate: "15/04/2023",
-// 	},
-// 	{
-// 		Title:   "Pasar coding dinilai masih sedikit",
-// 		Content: "Ketimpangan sumber daya manusia (SDM) di sektor digital masih menjadi isu yang belum terpecahkan. Berdasarkan penelitian ManpowerGroup, ketimpangan SDM global, termasuk Indonesia, meningkat dua kali lipat dalam satu dekade terakhir. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam, molestiae numquam! Deleniti maiores expedita eaque deserunt quaerat! Dicta, eligendi debitis?",
-// 		Author:  "Yoga Wicaksono",
-// 		// PostDate: "15/04/2023",
-// 	},
-// }
+type User struct {
+	ID       int
+	Name     string
+	Email    string
+	Password string
+}
+
+type SessionData struct {
+	IsLogin bool
+	Name    string
+}
+
+var userData = SessionData{}
 
 func main() {
 	connection.DatabaseConnect()
@@ -57,56 +54,46 @@ func main() {
 	// serve static files from public directory
 	e.Static("/public", "public")
 
+	// initialitation to use session
+	e.Use(session.Middleware(sessions.NewCookieStore([]byte("session"))))
+
 	// Routing = rute
-	e.GET("/hello", helloWorld)
-	e.GET("/about", about)
 	e.GET("/", home)
 	e.GET("/contact", contactMe)
 	e.GET("/blog", blog)
-	e.POST("/add-blog", addBlog)
 	e.GET("/blog-detail/:id", blogdetail)
 	e.GET("/delete-blog/:id", deleteBlog) // /delete-blog/0
+	e.GET("/form-register", formRegister)
+	e.GET("/form-login", formLogin)
+	e.GET("/logout", logout)
+	e.POST("/add-blog", addBlog)
+	e.POST("/register", register)
+	e.POST("/login", login)
 
 	e.Logger.Fatal(e.Start("localhost:5000"))
 }
 
-func helloWorld(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello World")
-}
-
-func about(c echo.Context) error {
-	return c.String(http.StatusOK, "Ini adalah about")
-}
-
 func home(c echo.Context) error {
+	sess, _ := session.Get("session", c)
+
+	if sess.Values["isLogin"] != true {
+		userData.IsLogin = false
+	} else {
+		userData.IsLogin = sess.Values["isLogin"].(bool)
+		userData.Name = sess.Values["name"].(string)
+	}
+
+	login := map[string]interface{}{
+		"DataSession": userData,
+	}
+
 	var tmpl, err = template.ParseFiles("views/index.html")
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message ": err.Error()})
 	}
 
-	data, _ := connection.Conn.Query(context.Background(), "SELECT * FROM public.tb_experience")
-
-	var exp []Experience
-
-	for data.Next() {
-		var each = Experience{}
-
-		err := data.Scan(&each.ID, &each.Project, &each.Year)
-
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
-		}
-
-		exp = append(exp, each)
-	}
-
-	fmt.Println(exp)
-	experiences := map[string]interface{}{
-		"Experience": exp,
-	}
-
-	return tmpl.Execute(c.Response(), experiences)
+	return tmpl.Execute(c.Response(), login)
 }
 
 func contactMe(c echo.Context) error {
@@ -145,8 +132,18 @@ func blog(c echo.Context) error {
 		result = append(result, each)
 	}
 
+	sess, _ := session.Get("session", c)
+
+	if sess.Values["isLogin"] != true {
+		userData.IsLogin = false
+	} else {
+		userData.IsLogin = sess.Values["isLogin"].(bool)
+		userData.Name = sess.Values["name"].(string)
+	}
+
 	blogs := map[string]interface{}{
-		"Blog": result,
+		"Blog":        result,
+		"DataSession": userData,
 	}
 
 	return tmpl.Execute(c.Response(), blogs)
@@ -204,11 +201,105 @@ func deleteBlog(c echo.Context) error {
 	return c.Redirect(http.StatusMovedPermanently, "/blog")
 }
 
-// var id = 3
-// var dataBlog = []string{"apple", "grape", "banana", "melon", "lemon", "mango"}
-// dataBlog[:id] = "apple", "grape", "banana"
-// dataBlog[id:] = "melon", "lemon", "mango"
+func formRegister(c echo.Context) error {
+	tmpl, err := template.ParseFiles("views/register.html")
 
-// dataBlog[:id] = "apple", "grape", "banana"
-// dataBlog[id+1:] = "lemon", "mango"
-// ... = "apple", "grape", "banana", "lemon", "mango"
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message ": err.Error()})
+	}
+
+	return tmpl.Execute(c.Response(), nil)
+}
+
+func formLogin(c echo.Context) error {
+	sess, _ := session.Get("session", c)
+	flash := map[string]interface{}{
+		"FlashStatus":  sess.Values["alertStatus"], // true / false
+		"FlashMessage": sess.Values["message"],     // "Register success"
+	}
+
+	delete(sess.Values, "message")
+	delete(sess.Values, "alertStatus")
+
+	tmpl, err := template.ParseFiles("views/login.html")
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message ": err.Error()})
+	}
+
+	return tmpl.Execute(c.Response(), flash)
+}
+
+func login(c echo.Context) error {
+	err := c.Request().ParseForm()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	email := c.FormValue("email")
+	password := c.FormValue("password")
+
+	user := User{}
+	err = connection.Conn.QueryRow(context.Background(), "SELECT * FROM tb_user WHERE email=$1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+
+	if err != nil {
+		return redirectWithMessage(c, "Email Salah !", false, "/form-login")
+	}
+
+	fmt.Println(user)
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+
+	if err != nil {
+		return redirectWithMessage(c, "Password Salah !", false, "/form-login")
+	}
+
+	sess, _ := session.Get("session", c)
+	sess.Options.MaxAge = 10800 // 3 jam
+	sess.Values["message"] = "Login Success"
+	sess.Values["alertStatus"] = true // show alert
+	sess.Values["name"] = user.Name
+	sess.Values["id"] = user.ID
+	sess.Values["isLogin"] = true // access login
+	sess.Save(c.Request(), c.Response())
+
+	return c.Redirect(http.StatusMovedPermanently, "/")
+}
+
+func register(c echo.Context) error {
+	err := c.Request().ParseForm()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	name := c.FormValue("name")
+	email := c.FormValue("email")
+	password := c.FormValue("password")
+
+	// generate password
+	passwordHash, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
+
+	_, err = connection.Conn.Exec(context.Background(), "INSERT INTO tb_user (name, email, password) VALUES ($1, $2, $3)", name, email, passwordHash)
+	if err != nil {
+		redirectWithMessage(c, "Register failed, please try again :)", false, "/form-register")
+	}
+
+	return redirectWithMessage(c, "Register success", true, "/form-login")
+}
+
+func logout(c echo.Context) error {
+	sess, _ := session.Get("session", c)
+	sess.Options.MaxAge = -1
+	sess.Save(c.Request(), c.Response())
+
+	return c.Redirect(http.StatusMovedPermanently, "/")
+}
+
+func redirectWithMessage(c echo.Context, message string, status bool, path string) error {
+	sess, _ := session.Get("session", c)
+	sess.Values["message"] = message
+	sess.Values["alertStatus"] = status
+	sess.Save(c.Request(), c.Response())
+
+	return c.Redirect(http.StatusMovedPermanently, path)
+}
