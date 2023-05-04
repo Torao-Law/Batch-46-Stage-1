@@ -112,7 +112,7 @@ func blog(c echo.Context) error {
 	}
 
 	// map(tipe data) => key and value
-	data, _ := connection.Conn.Query(context.Background(), "SELECT id, title, post_date, content, image FROM tb_blog")
+	data, _ := connection.Conn.Query(context.Background(), "SELECT tb_blog.id, title, content, image, post_date, tb_user.name AS author FROM tb_blog LEFT JOIN tb_user ON tb_blog.author = tb_user.id ORDER BY tb_blog.id DESC")
 	fmt.Println(data)
 
 	var result []Blog
@@ -120,13 +120,11 @@ func blog(c echo.Context) error {
 	for data.Next() {
 		var each = Blog{}
 
-		err := data.Scan(&each.ID, &each.Title, &each.PostDate, &each.Content, &each.Image)
+		err := data.Scan(&each.ID, &each.Title, &each.Content, &each.Image, &each.PostDate, &each.Author)
 		if err != nil {
 			fmt.Println(err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 		}
-
-		each.Author = "Dandi Saputra"
 
 		result = append(result, each)
 	}
@@ -158,9 +156,7 @@ func blogdetail(c echo.Context) error {
 
 	var BlogDetail = Blog{}
 
-	err = connection.Conn.QueryRow(context.Background(), "SELECT id, title, content, image, post_date FROM tb_blog WHERE id = $1", id).Scan(&BlogDetail.ID, &BlogDetail.Title, &BlogDetail.Content, &BlogDetail.Image, &BlogDetail.PostDate)
-
-	BlogDetail.Author = "Jery"
+	err = connection.Conn.QueryRow(context.Background(), "SELECT tb_blog.id, title, content, image, post_date, tb_user.name as author FROM tb_blog LEFT JOIN tb_user ON tb_blog.author = tb_user.id WHERE tb_blog.id = $1", id).Scan(&BlogDetail.ID, &BlogDetail.Title, &BlogDetail.Content, &BlogDetail.Image, &BlogDetail.PostDate, &BlogDetail.Author)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message ": err.Error()})
@@ -178,7 +174,10 @@ func addBlog(c echo.Context) error {
 	content := c.FormValue("content") // Finishing CRUD
 	image := "image.png"
 
-	_, err := connection.Conn.Exec(context.Background(), "INSERT INTO tb_blog(title, content, image, post_date) VALUES ($1, $2, $3, $4)", title, content, image, time.Now())
+	sess, _ := session.Get("session", c)
+	authorId := sess.Values["id"]
+
+	_, err := connection.Conn.Exec(context.Background(), "INSERT INTO tb_blog(title, content, image, post_date, author) VALUES ($1, $2, $3, $4, $5)", title, content, image, time.Now(), authorId)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message ": err.Error()})

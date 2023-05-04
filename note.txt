@@ -1,0 +1,26 @@
+jenis jenis relasi table
+one to one => 1 table hanya memiliki 1 relasi tabel
+one to many => 1 table memiliki banyak relasi
+many to many => banyak table memiliki banyak relasi
+
+primary key vs foreign key
+
+
+
+SQL JOIN
+
+SELECT tb_blog.title FROM tb_blog INNER JOIN tb_user on tb_blog.author = tb_user.id;
+
+SELECT tb_blog.id, title, content, image, post_date, tb_user.name as author from tb_blog left join
+tb_user on tb_blog.author = tb_user.id
+
+SELECT tb_user.id, name, email, tb_blog.title from tb_user left join tb_blog on
+tb_user.id = tb_blog.author 
+
+SELECT tb_user.id, name, email, tb_blog.title from tb_user right join tb_blog on
+tb_user.id = tb_blog.author 
+
+SELECT *
+FROM tb_blog
+FULL OUTER JOIN tb_user
+ON tb_blog.author = tb_user.id
