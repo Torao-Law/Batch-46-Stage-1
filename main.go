@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"personal-web/connection"
+	"personal-web/middleware"
 	"strconv"
 	"time"
 
@@ -53,6 +54,7 @@ func main() {
 
 	// serve static files from public directory
 	e.Static("/public", "public")
+	e.Static("/upload", "upload")
 
 	// initialitation to use session
 	e.Use(session.Middleware(sessions.NewCookieStore([]byte("session"))))
@@ -66,7 +68,7 @@ func main() {
 	e.GET("/form-register", formRegister)
 	e.GET("/form-login", formLogin)
 	e.GET("/logout", logout)
-	e.POST("/add-blog", addBlog)
+	e.POST("/add-blog", middleware.UploadFile(addBlog))
 	e.POST("/register", register)
 	e.POST("/login", login)
 
@@ -172,7 +174,7 @@ func blogdetail(c echo.Context) error {
 func addBlog(c echo.Context) error {
 	title := c.FormValue("title")     // Batch 46
 	content := c.FormValue("content") // Finishing CRUD
-	image := "image.png"
+	image := c.Get("dataFile").(string)
 
 	sess, _ := session.Get("session", c)
 	authorId := sess.Values["id"]
@@ -288,7 +290,6 @@ func register(c echo.Context) error {
 func logout(c echo.Context) error {
 	sess, _ := session.Get("session", c)
 	sess.Options.MaxAge = -1
-	sess.Values["isLogin"] = false
 	sess.Save(c.Request(), c.Response())
 
 	return c.Redirect(http.StatusTemporaryRedirect, "/")
